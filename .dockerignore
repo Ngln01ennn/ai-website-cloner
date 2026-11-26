@@ -35,6 +35,9 @@ Thumbs.db
 AGENTS.md
 CLAUDE.md
 
+# Cloned sites are separate apps with their own builds
+clones
+
 # Docs / research (large, not needed at runtime)
 docs
 scripts

@@ -13,7 +13,9 @@ Read project instructions, the actual framework/scripts, and existing routes. Op
 
 Record a short source-to-local route map and the files each page owns. Follow the app's conventions; in this template use `src/app/`, `src/components/sites/<site>/`, `public/sites/<site>/`, and `docs/research/<site>/`. Give origins, pages, and downloads distinct names; add a port or URL hash when readable names collide.
 
-- A first root clone may replace the untouched template homepage.
+**In this template, each new site gets its own app.** Unless the user asks to build into the root app, run `npm run new-clone <site>` (for example `npm run new-clone example.com`), then `npm install` inside `clones/<site>/` and do all work for that site there, using the same folder conventions relative to that app. Leave the root app untouched so the template stays reusable. If `clones/<site>/` already exists, continue in it instead of creating a second one. Run the project check inside the clone's folder.
+
+- A clone app's own homepage may replace its untouched scaffold homepage.
 - Preserve source pathnames for multiple pages from one origin. Query/fragment variations usually represent states of the same route; reproduce those states.
 - Preserve existing authored routes/assets. Update them when requested; resolve unrequested route collisions before replacing anything.
 - When adding pages to an existing clone, extend its layout and global styles without replacing the styles used by existing pages.
@@ -58,4 +60,4 @@ Run the project's production check. Completion requires a successful build **and
 
 ## Deliver
 
-Return preview/run instructions, the source-to-local route map, representative desktop/mobile comparisons, checks actually run, and remaining visual/functional gaps. Keep reference clones in separate apps when maintaining the reusable template.
+Return the clone's folder, preview/run instructions, the source-to-local route map, representative desktop/mobile comparisons, checks actually run, and remaining visual/functional gaps. Keep reference clones in separate apps when maintaining the reusable template.

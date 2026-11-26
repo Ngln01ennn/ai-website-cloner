@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Cloned sites in clones/ are separate apps; keep their classes out of the root build. */
+@source not "../../clones";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

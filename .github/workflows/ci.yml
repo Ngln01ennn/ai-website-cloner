@@ -34,3 +34,15 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Scaffold a clone app
+        run: npm run new-clone ci-smoke
+
+      - name: Root check with a clone present
+        run: npm run check
+
+      - name: Check inside the clone app
+        working-directory: clones/ci-smoke
+        run: |
+          npm ci
+          npm run check
