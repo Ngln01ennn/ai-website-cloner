@@ -63,6 +63,15 @@ Open the project in your agent with browser access enabled. In Claude Code or Cu
 
 Replace the URL with the website you want to recreate. Once it's built, ask your agent for any changes you want.
 
+Each site is built as its own app in `clones/<site>/`, so the template stays clean for the next one. You can also create the folder yourself:
+
+```
+npm run new-clone example.com
+cd clones/example-com
+npm install
+npm run dev
+```
+
 ## Supported Platforms
 
 | Agent                                                         | Status                     |
@@ -120,6 +129,8 @@ src/
   hooks/            # Custom React hooks
 public/
   sites/<site>/     # Source-specific images, fonts, videos, and other assets
+clones/
+  <site>/           # One standalone Next.js app per cloned site
 docs/
   research/<site>/  # Page brief, asset map, and inspection evidence
   design-references/ # Screenshots
@@ -139,6 +150,7 @@ npm run build  # Production build
 npm run lint   # ESLint check
 npm run typecheck # TypeScript check
 npm run check  # Run lint + typecheck + build
+npm run new-clone <site> # Create clones/<site>/ as its own Next.js app
 ```
 
 ### If using docker

@@ -26,6 +26,7 @@ A reusable template for reverse-engineering any website into a clean, modern Nex
 - `npm run lint` — ESLint check
 - `npm run typecheck` — TypeScript check
 - `npm run check` — Run lint + typecheck + build
+- `npm run new-clone <site>` — Create `clones/<site>/`, a standalone Next.js app for one cloned site
 
 ## Code Style
 - TypeScript strict mode, no `any`
@@ -56,7 +57,8 @@ public/
 docs/
   research/<site>/  # Page brief, asset map, and inspection evidence
   design-references/ # Screenshots and visual references
-scripts/            # Asset download scripts
+scripts/            # new-clone.mjs and asset download scripts
+clones/<site>/      # One standalone Next.js app per cloned site
 .agents/
   skills/
     clone-website/  # Canonical cross-agent cloning workflow
@@ -64,6 +66,11 @@ scripts/            # Asset download scripts
   commands/
     clone-website.md # Thin Claude Code invocation bridge
 ```
+
+## One App Per Cloned Site
+- New clones go in `clones/<site>/`, created with `npm run new-clone <site>`. Each one is its own Next.js app with its own `package.json`, lockfile and checks.
+- The root app stays the clean scaffold, so the template can be reused for the next site. Lint, typecheck, Tailwind and Docker at the root ignore `clones/`.
+- Inside a clone, use the same structure as below (`src/app/`, `src/components/sites/<site>/`, `public/sites/<site>/`, `docs/research/<site>/`).
 
 ## Agent Workflow
 - Edit `.agents/skills/clone-website/` for cloning-workflow changes. It is the canonical skill used by Codex, Cursor, and OpenCode.

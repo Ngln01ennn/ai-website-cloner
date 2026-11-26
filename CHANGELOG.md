@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `npm run new-clone <site>` creates `clones/<site>/` as a standalone Next.js app, so each cloned site lives in its own folder and the root template stays reusable. The skill uses it by default. Root lint, typecheck, Tailwind and Docker ignore `clones/`, and CI checks the root again with a clone present and checks the clone itself.
+
 ## [0.6.2] - 2026-11-25
 
 ### Security
