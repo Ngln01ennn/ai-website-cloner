@@ -5,22 +5,32 @@ description: Rebuild existing web pages as working local code, matching their re
 
 # Clone a website
 
-Recreate the supplied pages in the current app. Match the source before adding a new design direction. Deliver working, editable code: screenshots, iframes, and downloaded production bundles are references, not the implementation.
+Recreate the supplied pages in a site app of their own. Match the source before adding a new design direction. Deliver working, editable code: screenshots, iframes, and downloaded production bundles are references, not the implementation.
+
+## 0. Pick the site folder
+
+In this template every cloned site is its own standalone Next.js app in `sites/<site>/`, with its own `package.json`, lockfile, and `node_modules`. The root app is the clean template: never build a clone into the root `src/`, `public/`, or `docs/research/`, and leave the root files unchanged.
+
+- **New site:** from the template root run `npm run new-site -- <source-url>`. It copies the template app to `sites/<host>/` (for example `https://www.example.com` → `sites/example-com/`) and runs `npm ci` there. Pass `--name <site>` for another folder name. Flags may be dropped by some shells between npm and the script; `node scripts/new-site.mjs <source-url> --name <site>` passes them directly on every OS.
+- **More pages from a site that already has a folder:** work in that folder; do not create a second one.
+- **Different origins:** one folder per origin, unless the user asks for a combined app.
+
+From here on, "the app" means `sites/<site>/`. Run every command (`npm run dev`, `npm run check`, asset scripts) inside it, and give all paths relative to it. Use Node or the agent's own tools for file work rather than shell-specific commands, so the workflow runs the same on Windows, macOS, and Linux.
 
 ## 1. Map the work
 
-Read project instructions, the actual framework/scripts, and existing routes. Open the source URLs with the available browser. Prefer direct HTTP, asset tools, or APIs for extraction when practical; use the browser to establish appearance and behavior.
+Read project instructions, the site app's framework/scripts, and its existing routes. Open the source URLs with the available browser. Prefer direct HTTP, asset tools, or APIs for extraction when practical; use the browser to establish appearance and behavior.
 
-Record a short source-to-local route map and the files each page owns. Follow the app's conventions; in this template use `src/app/`, `src/components/sites/<site>/`, `public/sites/<site>/`, and `docs/research/<site>/`. Give origins, pages, and downloads distinct names; add a port or URL hash when readable names collide.
+Record a short source-to-local route map and the files each page owns. Inside the site app use `src/app/` for routes, `src/components/` for components (`src/components/ui/` holds the shadcn/ui primitives), `public/` for assets, `docs/research/` for the page brief and evidence, `docs/design-references/` for screenshots, and `scripts/` for download scripts. Give pages and downloads distinct names; add a port or URL hash when readable names collide.
 
-- A first root clone may replace the untouched template homepage.
+- The first clone in a site app replaces its untouched placeholder homepage.
 - Preserve source pathnames for multiple pages from one origin. Query/fragment variations usually represent states of the same route; reproduce those states.
 - Preserve existing authored routes/assets. Update them when requested; resolve unrequested route collisions before replacing anything.
-- When adding pages to an existing clone, extend its layout and global styles without replacing the styles used by existing pages.
-- Use separate apps for different origins unless the user wants a combined app. Combined sites need distinct route prefixes and scoped fonts, styles, and layout.
+- When adding pages to an existing site app, extend its layout and global styles without replacing the styles used by existing pages.
+- A combined app for several origins (only when asked) needs distinct route prefixes and scoped fonts, styles, and layout.
 - Escape literal URL segments that conflict with framework syntax (`_`, `@`, brackets, parentheses) using its supported mechanism, then verify the actual requested URL.
 
-Existing clones are useful starting points: compare them with the current source and record what was reused. Finish when every requested URL has a destination and file ownership is clear.
+Other site folders are useful references: compare them with the current source and record what was reused, but copy code into this site rather than importing across folders. Finish when every requested URL has a destination and file ownership is clear.
 
 ## 2. Observe before building
 
@@ -44,7 +54,7 @@ Build coherent sections with real content. Delegate independent pages/sections a
 
 Recreate in-scope interactions. Preserve real outbound destinations. Rewrite links to local routes when those routes are included; leave out-of-scope destinations pointing to the source and disclose them. Visible controls must perform the behavior they promise.
 
-Run the appropriate project check after an integrated slice. Finish this pass when every requested section/route renders with actual assets and important controls work.
+Run `npm run check` in the site folder after an integrated slice. Finish this pass when every requested section/route renders with actual assets and important controls work.
 
 ## 4. Compare, repair, repeat
 
@@ -54,8 +64,8 @@ Fix the largest visible differences first: geometry, missing sections/layers, ty
 
 Exercise the real local workflow: navigation between cloned routes, mobile menu, tab/accordion states, carousel boundaries, primary actions, media controls, and observed scroll-linked transitions. Check runtime errors, missing assets, and horizontal overflow. When adding pages, verify existing routes still work. Use a few browser checks at these boundaries rather than assertions about class names.
 
-Run the project's production check. Completion requires a successful build **and** rendered comparison. State remaining differences precisely instead of calling an unchecked result pixel-perfect.
+Run `npm run check` inside the site folder, then `npm run check` at the template root to confirm the root app is still clean. Completion requires a successful build **and** rendered comparison. State remaining differences precisely instead of calling an unchecked result pixel-perfect.
 
 ## Deliver
 
-Return preview/run instructions, the source-to-local route map, representative desktop/mobile comparisons, checks actually run, and remaining visual/functional gaps. Keep reference clones in separate apps when maintaining the reusable template.
+Return the site folder, preview/run instructions (`cd sites/<site>` then `npm run dev`; add `-- --port 3001` when another app holds port 3000), the source-to-local route map, representative desktop/mobile comparisons, checks actually run, and remaining visual/functional gaps.

@@ -26,8 +26,18 @@ npm ci
 Before opening a PR, make sure the project is green:
 
 ```bash
-npm run check   # lint + typecheck + build
+npm run check   # lint + typecheck + tests + build
 ```
+
+If you change the scaffold or `scripts/new-site.mjs`, also create a throwaway site and check it on its own:
+
+```bash
+npm run new-site -- https://example.com
+cd sites/example-com
+npm run check
+```
+
+Delete the throwaway folder before you commit. CI runs both checks on Ubuntu and Windows. Keep scripts cross-platform: Node in `scripts/` rather than shell commands in `package.json`, `path.join` rather than hard-coded separators, and no symlinks.
 
 ## Source-of-truth files
 

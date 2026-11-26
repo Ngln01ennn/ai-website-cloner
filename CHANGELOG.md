@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `npm run new-site -- <url>` creates `sites/<site>/`, a standalone Next.js app copied from the template with its own `package.json`, lockfile, and `node_modules`. It is plain Node, so it works the same on Windows, macOS, and Linux.
+- Tests for the site generator (`npm test`), now part of `npm run check`.
+- CI on Ubuntu and Windows that checks the template app, creates an example site, and checks the template again and the site on its own.
+
+### Changed
+- `/clone-website` builds each site in its own `sites/<site>/` folder by default and keeps the root template app clean, so the next site can start without cleanup.
+- The template's lint, typecheck, Tailwind scan, and Docker context ignore `sites/`; `next.config.ts` pins the app root so a site's build and standalone output stay inside its folder.
+
 ## [0.6.2] - 2026-11-25
 
 ### Security

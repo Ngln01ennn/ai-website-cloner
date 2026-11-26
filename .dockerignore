@@ -10,6 +10,9 @@ out
 build
 dist
 
+# Cloned site apps (each builds its own image from its own folder)
+sites
+
 # Git
 .git
 .gitignore

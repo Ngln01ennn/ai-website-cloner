@@ -10,8 +10,13 @@ on:
 
 jobs:
   quality:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    name: quality (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -26,11 +31,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
+      # Template app alone: lint + typecheck + generator tests + build.
+      - name: Check template
+        run: npm run check
 
-      - name: Type check
-        run: npm run typecheck
+      # Runs in the runner's default shell (PowerShell on Windows), as a user would.
+      - name: Create an example site
+        run: npm run new-site -- https://www.example.com
 
-      - name: Build
-        run: npm run build
+      - name: Check template with a site folder present
+        run: npm run check
+
+      - name: Check the site on its own
+        working-directory: sites/example-com
+        run: npm run check
+
+      - name: Site build stays inside its folder
+        working-directory: sites/example-com
+        run: node -e "require('fs').accessSync(require('path').join('.next', 'standalone', 'server.js'))"
+
+      - name: Generator flags work when called directly
+        run: node scripts/new-site.mjs https://www.example.com --name example-flags --no-install
