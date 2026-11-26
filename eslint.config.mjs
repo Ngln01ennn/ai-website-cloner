@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Each folder in sites/ is its own app with its own lint config.
+    "sites/**",
   ]),
 ]);
 

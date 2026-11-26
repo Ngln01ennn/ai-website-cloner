@@ -61,7 +61,14 @@ Open the project in your agent with browser access enabled. In Claude Code or Cu
 /clone-website https://example.com
 ```
 
-Replace the URL with the website you want to recreate. Once it's built, ask your agent for any changes you want.
+Replace the URL with the website you want to recreate. The agent creates a new folder for it, `sites/example-com/`, builds the clone there as its own Next.js app, and leaves the template untouched, so you can start the next site right away. Once it's built, ask your agent for any changes you want.
+
+To run a clone yourself:
+
+```bash
+cd sites/example-com
+npm run dev
+```
 
 ## Supported Platforms
 
@@ -86,7 +93,7 @@ Replace the URL with the website you want to recreate. Once it's built, ask your
 
 ## How It Works
 
-The `/clone-website` skill follows four steps:
+The `/clone-website` skill first creates the site's own app folder with `npm run new-site -- <url>` (or reuses the folder when you add pages to a site you already cloned), then follows four steps inside it:
 
 1. **Map** — map source URLs to local routes and preserve existing work.
 2. **Observe** — inspect desktop/mobile pages, extract real assets and fonts, and exercise alternate states.
@@ -110,19 +117,19 @@ Framer pages and animated sites have focused inspection guidance for responsive 
 ## Project Structure
 
 ```
-src/
+sites/
+  <site>/           # One standalone Next.js app per cloned site
+    src/app/        # That site's routes
+    src/components/ # That site's components and extracted SVGs
+    public/         # That site's images, fonts, videos, and other assets
+    docs/research/  # Page brief, asset map, and inspection evidence
+    docs/design-references/ # Comparison screenshots
+src/                # The clean template app each new site is copied from
   app/              # Next.js routes
-  components/       # React components
-    ui/             # shadcn/ui primitives
-    sites/<site>/   # Source-specific components and extracted SVGs
+  components/ui/    # shadcn/ui primitives
   lib/utils.ts      # cn() utility
-  types/            # TypeScript interfaces
-  hooks/            # Custom React hooks
-public/
-  sites/<site>/     # Source-specific images, fonts, videos, and other assets
-docs/
-  research/<site>/  # Page brief, asset map, and inspection evidence
-  design-references/ # Screenshots
+public/             # Template static files
+scripts/new-site.mjs # Creates sites/<site>/ (plain Node, works on Windows/macOS/Linux)
 .agents/skills/
   clone-website/    # Canonical skill and inspection reference
 .claude/commands/
@@ -131,10 +138,24 @@ AGENTS.md           # Agent instructions (single source of truth)
 CLAUDE.md           # Claude Code config (imports AGENTS.md)
 ```
 
+Each folder in `sites/` has its own `package.json`, lockfile, and `node_modules`, so you can run, deploy (set it as the project root, e.g. Vercel's Root Directory), or move it out of the repository on its own. Site folders are meant to be committed with your work; the root app's lint, typecheck, and build ignore them.
+
 ## Commands
 
+At the template root:
+
 ```bash
-npm run dev    # Start dev server
+npm run new-site -- https://example.com  # Create sites/example-com/ and install it
+npm run new-site -- https://example.com --name example-docs  # Pick the folder name
+npm run check  # Lint + typecheck + tests + build of the template app
+```
+
+Some shells drop `--flags` between npm and the script; `node scripts/new-site.mjs https://example.com --name example-docs` passes them directly on every OS.
+
+Inside a site folder (`cd sites/<site>`):
+
+```bash
+npm run dev    # Start dev server (npm run dev -- --port 3001 to run beside another)
 npm run build  # Production build
 npm run lint   # ESLint check
 npm run typecheck # TypeScript check
@@ -142,6 +163,8 @@ npm run check  # Run lint + typecheck + build
 ```
 
 ### If using docker
+
+Run these inside a site folder to containerize that site (or at the root for the template app):
 
 ```bash
 docker compose up app --build # build and run the app
